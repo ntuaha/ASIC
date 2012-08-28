@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">ASIC</string>
-    <string name="title_section3">Section 3</string>
+    <string name="title_section3">Other</string>
     <string name="title_section2">濕度</string>
     <string name="title_section1">溫度</string>
     <string name="hello_world">Hello world!</string>
