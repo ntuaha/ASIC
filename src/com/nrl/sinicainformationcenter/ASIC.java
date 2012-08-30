@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import com.nrl.about.About;
 import com.nrl.utility.Constant;
 import com.nrl.utility.DateUtility;
+import com.nrl.utility.NetworkTool;
 import com.nrl.utility.WeatherConstant;
 
 
@@ -60,6 +61,13 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.PostTask{
 	
 	long last_update_time =0;
 	
+	Handler UIhandler;
+	Runnable runnable = new Runnable(){
+		public void run() {
+			refresh();						
+		}	
+	};
+	
 	@Override
 	protected void onResume() {
 		refresh();
@@ -94,6 +102,7 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.PostTask{
 		wind_directionFragment = new InfoFragment();
 		otherFragment = new InfoFragment();
 		weatherFragment = new WeatherFragment();
+		UIhandler = new Handler();
 	}
 
 
@@ -163,18 +172,25 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.PostTask{
 
 
 	@Override
+	protected void onDestroy() {
+		UIhandler.removeCallbacks(runnable);
+		super.onDestroy();
+	}
+	
+	@Override
 	public void run(JSONObject data) {
 		try{
 			if(data==null){
-				Log.i("MainActivity","null");
-				Toast.makeText(ASIC.this, getResources().getString(R.string.wait_refresh), Toast.LENGTH_SHORT).show();
-				(new Handler()).postDelayed(new Runnable(){
-					@Override
-					public void run() {
-						refresh();						
-					}					
-				},Constant.AUTO_REFRESH_PERIODIC);
-				return;
+				if(NetworkTool.HaveNetworkConnection(ASIC.this))
+				{
+					Log.i("MainActivity","null");
+					Toast.makeText(ASIC.this, getResources().getString(R.string.wait_refresh), Toast.LENGTH_SHORT).show();
+					UIhandler.postDelayed(runnable,Constant.AUTO_REFRESH_PERIODIC);
+					return;
+				}else{
+					Toast.makeText(ASIC.this, getResources().getString(R.string.disconnect), Toast.LENGTH_SHORT).show();
+					return;
+				}
 			}
 			last_update_time = System.currentTimeMillis();
 			
