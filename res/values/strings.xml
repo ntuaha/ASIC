@@ -22,8 +22,8 @@
     
     
     <!-- About.java -->
-    <string name="contact_mail">E-Mail:ntuaha@gmail.com</string>
+    <string name="contact_mail">ntuaha@gmail.com</string>
     <string name="developer">本APP由NRL開發</string>
-    <string name="copyright_claim">ASIC 2011-2012 版權所有</string>
+    <string name="copyright_claim">aha</string>
 
 </resources>
