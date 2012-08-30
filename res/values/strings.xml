@@ -10,7 +10,7 @@
     <string name="title_section2">濕度</string>
     <string name="title_section1">溫度</string>
     <string name="current_weather">目前氣象</string>
-    <string name="total_rainfall">雨量\n(mm/hr)</string>
+    <string name="total_rainfall">雨量</string>
     <string name="update_time">更新時間</string>
     <string name="menu_settings">設定</string>
     <string name="menu_about">關於</string>
