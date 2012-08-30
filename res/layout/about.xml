@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
+    android:padding="0dip" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:padding="0dip" >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:text="@string/app_full_name"
+            android:textSize="22dip"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="5dip"
+            android:paddingLeft="5dip"
+            android:paddingRight="5dip"
+            android:paddingTop="5dip"
+            android:text="@string/version_number"
+            android:textSize="16dip"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="5dip"
+            android:paddingLeft="5dip"
+            android:paddingRight="5dip"
+            android:text="@string/copyright_claim"
+            android:textSize="16dip" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="5dip"
+            android:paddingLeft="5dip"
+            android:paddingRight="5dip"
+            android:text="@string/developer"
+            android:textSize="16dip" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="email"
+            android:gravity="center"
+            android:paddingBottom="5dip"
+            android:paddingLeft="15dip"
+            android:paddingRight="5dip"
+            android:text="@string/contact_mail"
+            android:textSize="16dip" />
+    </LinearLayout>
+
+</ScrollView>

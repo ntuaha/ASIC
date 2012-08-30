@@ -1,5 +1,25 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="AppTheme" parent="android:Theme.Light" />
+
+    <style name="basicText">
+         <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+    </style>
+
+    <style name="basicRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+    </style>
+    
+    <style name="fragment_weather_bacicInfoBlock">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">3dp</item>
+    <!--   <itme name="android:background">@drawable/recordviewinfoblock</itme> -->  
+    </style>
 
 </resources>

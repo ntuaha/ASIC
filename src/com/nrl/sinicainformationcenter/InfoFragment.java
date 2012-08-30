@@ -112,6 +112,11 @@ public class InfoFragment extends Fragment{
 			time_series.add(time, value);			
 		}
 	}
+	public void clean(){
+		if(time_series!=null){
+			time_series.clear();			
+		}
+	}
 	public void reDraw(double YMin,double YMax, String title){
 		if(mChartView!=null){
 			mRenderer.setYAxisMax(YMax);

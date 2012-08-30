@@ -1,11 +1,29 @@
 <resources>
 
     <string name="app_name">ASIC</string>
-    <string name="title_section3">Other</string>
+    <string name="app_full_name">Academia Sinica Information Center (ASIC)</string>
+    <string name="version_number">0.1</string>
+    <string name="title_section6">風向</string>
+    <string name="title_section5">風速</string>
+    <string name="title_section4">光度</string>
+    <string name="title_section3">雨量</string>
     <string name="title_section2">濕度</string>
     <string name="title_section1">溫度</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Settings</string>
+    <string name="current_weather">目前氣象</string>
+    <string name="total_rainfall">雨量\n(mm/hr)</string>
+    <string name="update_time">更新時間</string>
+    <string name="menu_settings">設定</string>
+    <string name="menu_about">關於</string>
+    <string name="menu_refresh">更新</string>
     <string name="title_activity_main">Academia Sinica </string>
+    <string name="weather_status">Weather Status</string>
+    <string name="refresh_periodi_short">請於五分鐘後再更新一次</string>
+    <string name="wait_refresh">請等待，會自動更新</string>
+    
+    
+    <!-- About.java -->
+    <string name="contact_mail">E-Mail:ntuaha@gmail.com</string>
+    <string name="developer">本APP由NRL開發</string>
+    <string name="copyright_claim">ASIC 2011-2012 版權所有</string>
 
 </resources>

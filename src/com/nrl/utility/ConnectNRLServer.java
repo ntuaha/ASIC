@@ -26,6 +26,7 @@ public class ConnectNRLServer {
 	static public JSONObject connectServer(String object,long startTime,long duration) throws ConnectTimeoutException{
 		JSONObject feedback = null;
 		HttpPost httpRequest = new HttpPost(Constant.CONNECT_PATH+"?datetime="+startTime+"&duration="+duration);
+		Log.d("Connect",Constant.CONNECT_PATH+"?datetime="+startTime+"&duration="+duration);
 		MultipartEntity entity = new MultipartEntity();
 		try {
 			entity.addPart("data", new StringBody(object,Charset.forName("UTF-8")));
