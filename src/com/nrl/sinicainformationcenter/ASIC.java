@@ -27,9 +27,11 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class ASIC extends FragmentActivity implements RetrieveDataTask.PostTask{
+public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide fragments for each of the
@@ -49,6 +51,9 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.PostTask{
 	InfoFragment wind_directionFragment;
 	InfoFragment otherFragment;
 	WeatherFragment weatherFragment;
+	
+	TextView processView;
+	
 	long[] time_th;
 	long[] time_l;
 	long[] time_w;
@@ -89,7 +94,7 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.PostTask{
 		setContentView(R.layout.activity_main);
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-
+		processView = (TextView) findViewById(R.id.process);
 
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -102,10 +107,12 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.PostTask{
 		wind_directionFragment = new InfoFragment();
 		otherFragment = new InfoFragment();
 		weatherFragment = new WeatherFragment();
+		
 		UIhandler = new Handler();
 	}
 
-
+	
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
@@ -177,21 +184,48 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.PostTask{
 		super.onDestroy();
 	}
 	
+	
+	public void pre_run() {
+		if(processView!=null){
+			processView.setVisibility(View.VISIBLE);
+			processView.setText(getResources().getString(R.string.loading));
+		}
+	}
+	
+	private void showProcessInfo(String string){
+		if(processView!=null){
+			processView.setVisibility(View.VISIBLE);
+			processView.setText(string);
+		}else{
+			Log.d("ASIC","processView is null");
+		}
+	}
+	private void hideProcessInfo(){
+		if(processView!=null){
+			processView.setVisibility(View.INVISIBLE);
+			
+		}else{
+			Log.d("ASIC","processView is null");
+		}
+	}
+	
+	
 	@Override
-	public void run(JSONObject data) {
+	public void post_run(JSONObject data) {
 		try{
 			if(data==null){
 				if(NetworkTool.HaveNetworkConnection(ASIC.this))
 				{
 					Log.i("MainActivity","null");
-					Toast.makeText(ASIC.this, getResources().getString(R.string.wait_refresh), Toast.LENGTH_SHORT).show();
+					showProcessInfo(getResources().getString(R.string.wait_refresh));
 					UIhandler.postDelayed(runnable,Constant.AUTO_REFRESH_PERIODIC);
 					return;
-				}else{
-					Toast.makeText(ASIC.this, getResources().getString(R.string.disconnect), Toast.LENGTH_SHORT).show();
+				}else{					
+					showProcessInfo(getResources().getString(R.string.disconnect));
 					return;
 				}
 			}
+			hideProcessInfo();
 			last_update_time = System.currentTimeMillis();
 			
 			//Parser JSONData to native array

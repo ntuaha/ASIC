@@ -2,7 +2,7 @@
 
     <string name="app_name">ASIC</string>
     <string name="app_full_name">Academia Sinica Information Center (ASIC)</string>
-    <string name="version_number">1.1</string>
+    <string name="version_number">1.02</string>
     <string name="title_section6">風向</string>
     <string name="title_section5">風速</string>
     <string name="title_section4">光度</string>
@@ -20,6 +20,7 @@
     <string name="refresh_periodi_short">請於五分鐘後再更新一次</string>
     <string name="wait_refresh">請等待，會自動更新</string>
     <string name="disconnect">沒有任何網路連線，請待有網路連線的時候再開啓一次程式</string>
+    <string name="loading">loading\.\.\.</string>
     
     
     <!-- About.java -->

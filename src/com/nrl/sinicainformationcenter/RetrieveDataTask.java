@@ -12,16 +12,23 @@ import com.nrl.utility.Constant;
 
 public class RetrieveDataTask extends AsyncTask<JSONObject, JSONObject, JSONObject> {
 
-	public interface PostTask{
-		void run(JSONObject object);
+	public interface UITask{
+		void post_run(JSONObject object);
+		void pre_run();
 	};
-	private PostTask postTask;
-	public RetrieveDataTask(PostTask postTask){
-		this.postTask = postTask;
+	private UITask uiTask;
+	public RetrieveDataTask(UITask uiTask){
+		this.uiTask = uiTask;
 	}
 
-    protected void onPostExecute(JSONObject object) {
-			postTask.run(object);
+    @Override
+	protected void onPreExecute() {
+    	uiTask.pre_run();
+		super.onPreExecute();
+	}
+
+	protected void onPostExecute(JSONObject object) {
+			uiTask.post_run(object);
 	
     }
 

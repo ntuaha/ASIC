@@ -83,27 +83,30 @@ public class WeatherFragment extends Fragment{
 	}
 
 	public void update(WeatherConstant weather,String update_time,int temperature,int humidity,double rainfall){
-		weatherView.setImageResource(weather.getDrawable());
-
-		updateTimeView.reDraw(getResources().getString(R.string.update_time),-1,update_time);
-		if(temperature>33)
-			temperatureView.reDraw(temperature,Color.RED);
-		else if(temperature>28)
-			temperatureView.reDraw(temperature,Color.argb(255, 255, 128, 0));
-		else if(temperature>18)
-			temperatureView.reDraw(temperature,Color.GREEN);
-		else if(temperature>15)
-			temperatureView.reDraw(temperature,Color.BLUE);
-		else
-			temperatureView.reDraw(temperature,Color.argb(255, 255, 0, 255));
-		
-		if(humidity>70)
-			humidityView.reDraw(humidity,Color.BLUE);		
-		else if (humidity>40)
-			humidityView.reDraw(humidity,Color.GREEN);
-		else
-			humidityView.reDraw(humidity,Color.RED);
-		rainfallView.reDraw(rainfall,Color.BLACK);
+		if(isAdded())
+		{
+			weatherView.setImageResource(weather.getDrawable());
+	
+			updateTimeView.reDraw(getResources().getString(R.string.update_time),-1,update_time);
+			if(temperature>33)
+				temperatureView.reDraw(temperature,Color.RED);
+			else if(temperature>28)
+				temperatureView.reDraw(temperature,Color.argb(255, 255, 128, 0));
+			else if(temperature>18)
+				temperatureView.reDraw(temperature,Color.GREEN);
+			else if(temperature>15)
+				temperatureView.reDraw(temperature,Color.BLUE);
+			else
+				temperatureView.reDraw(temperature,Color.argb(255, 255, 0, 255));
+			
+			if(humidity>70)
+				humidityView.reDraw(humidity,Color.BLUE);		
+			else if (humidity>40)
+				humidityView.reDraw(humidity,Color.GREEN);
+			else
+				humidityView.reDraw(humidity,Color.RED);
+			rainfallView.reDraw(rainfall,Color.BLACK);
+		}
 	}
 
 
