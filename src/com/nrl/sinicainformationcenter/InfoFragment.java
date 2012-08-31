@@ -81,28 +81,37 @@ public class InfoFragment extends Fragment{
 		mRenderer = new XYMultipleSeriesRenderer();
 		mRenderer.setAxisTitleTextSize(30);
 		mRenderer.setYLabelsAlign(Align.RIGHT);
+		mRenderer.setYLabelsColor(0, Color.BLACK);
+		mRenderer.setXLabelsColor(Color.BLACK);
 		mRenderer.setYAxisMax(YMax);
 		mRenderer.setYAxisMin(YMin);
 		mRenderer.setChartTitleTextSize(20);
 		mRenderer.setLabelsTextSize(30);
 		mRenderer.setLegendTextSize(30);
-		mRenderer.setMargins(new int[]{50,50,50,50});
+		mRenderer.setAntialiasing(true);
+		mRenderer.setAxesColor(getResources().getColor(R.color.main_color_blue));	
+		mRenderer.setLabelsColor(Color.BLACK);
+		mRenderer.setApplyBackgroundColor (true);
+		mRenderer.setMargins(new int[]{100,100,100,100});
+		mRenderer.setMarginsColor(Color.parseColor("#EEEEEE"));
 		mRenderer.setLegendHeight(60);
 		mRenderer.setPointSize(6f);
 
 		XYSeriesRenderer r = new XYSeriesRenderer();
-		r.setColor(Color.GREEN);
+		r.setColor(getResources().getColor(R.color.main_color_blue));
 		r.setPointStyle(PointStyle.CIRCLE);
 		r.setFillPoints(true);
+		
 		mRenderer.addSeriesRenderer(r);
 		mRenderer.setClickEnabled(true);
 		mRenderer.setSelectableBuffer(20);
 		mRenderer.setPanEnabled(true);
+		
 
 		time_series = new TimeSeries(title);
 		mDataset.addSeries(time_series);
 		mChartView = ChartFactory.getTimeChartView(context, mDataset, mRenderer,"H:mm");
-
+		
 		layout.addView(mChartView);	
 		return view;
 	}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- http://developer.android.com/design/style/color.html -->
+    <color name="main_color_blue">#33b5e5</color>
+    <color name="main_color_deepblue">#0099CC</color>
+    <color name="main_color_white">#FFECECEC</color>
+    <color name="main_color_green">#FF669900</color>
+    <color name="main_color_red">#FFCC0000</color>
+    <color name="main_color_oragne">#FFFF8800</color>
+
+</resources>

@@ -9,12 +9,15 @@ import com.nrl.about.About;
 import com.nrl.utility.Constant;
 import com.nrl.utility.DateUtility;
 import com.nrl.utility.NetworkTool;
+import com.nrl.utility.TempData;
 import com.nrl.utility.WeatherConstant;
 
 
 
 
+import android.app.ActionBar;
 import android.content.Intent;
+import android.drm.DrmStore.Action;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -28,6 +31,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,9 +55,9 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 	InfoFragment wind_directionFragment;
 	InfoFragment otherFragment;
 	WeatherFragment weatherFragment;
-	
+
 	TextView processView;
-	
+
 	long[] time_th;
 	long[] time_l;
 	long[] time_w;
@@ -63,16 +67,13 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 	double[] illumination;
 	double[] wind_velocity;
 	double[] wind_direction;
-	
+
 	long last_update_time =0;
-	
-	Handler UIhandler;
-	Runnable runnable = new Runnable(){
-		public void run() {
-			refresh();						
-		}	
-	};
-	
+
+
+	TempData tempData;
+
+
 	@Override
 	protected void onResume() {
 		refresh();
@@ -107,12 +108,12 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 		wind_directionFragment = new InfoFragment();
 		otherFragment = new InfoFragment();
 		weatherFragment = new WeatherFragment();
-		
-		UIhandler = new Handler();
+		tempData = new TempData();
+		tempData.loadData(getSharedPreferences(TempData.PREFS_NAME,0));
 	}
 
-	
-	
+
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
@@ -125,7 +126,7 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 		case R.id.menu_about:
 			intent = new Intent(ASIC.this,About.class);
 			startActivity(intent);
-		break;
+			break;
 		case R.id.menu_refresh:
 			refresh();
 		}
@@ -180,18 +181,18 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 
 	@Override
 	protected void onDestroy() {
-		UIhandler.removeCallbacks(runnable);
+		//UIhandler.removeCallbacks(runnable);
 		super.onDestroy();
 	}
-	
-	
+
+
 	public void pre_run() {
 		if(processView!=null){
 			processView.setVisibility(View.VISIBLE);
 			processView.setText(getResources().getString(R.string.loading));
 		}
 	}
-	
+
 	private void showProcessInfo(String string){
 		if(processView!=null){
 			processView.setVisibility(View.VISIBLE);
@@ -203,31 +204,42 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 	private void hideProcessInfo(){
 		if(processView!=null){
 			processView.setVisibility(View.INVISIBLE);
-			
+
 		}else{
 			Log.d("ASIC","processView is null");
 		}
 	}
-	
-	
+
+
 	@Override
 	public void post_run(JSONObject data) {
 		try{
 			if(data==null){
 				if(NetworkTool.HaveNetworkConnection(ASIC.this))
 				{
-					Log.i("MainActivity","null");
+					//Log.i("MainActivity","null");
 					showProcessInfo(getResources().getString(R.string.wait_refresh));
-					UIhandler.postDelayed(runnable,Constant.AUTO_REFRESH_PERIODIC);
-					return;
+
 				}else{					
 					showProcessInfo(getResources().getString(R.string.disconnect));
-					return;
+
 				}
+				tempData.loadData(getSharedPreferences(TempData.PREFS_NAME,0));
+				if(tempData.data!=null)
+					data = new JSONObject(tempData.data);
+				else
+					return;
+
+			}else{
+				tempData.data = data.toString();
+				tempData.data_time = System.currentTimeMillis();
+				tempData.saveData(getSharedPreferences(TempData.PREFS_NAME,0));
+				last_update_time = System.currentTimeMillis();
+				hideProcessInfo();
 			}
-			hideProcessInfo();
-			last_update_time = System.currentTimeMillis();
-			
+
+
+
 			//Parser JSONData to native array
 			JSONArray temperatures = data.getJSONArray("temperature");
 			JSONArray humidities = data.getJSONArray("humidity");
@@ -305,18 +317,18 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 		int lastest_humidity = parserDataToFragment(humidityFragment,humidity,time_th,1,"Humidity");
 		parserDataToFragment(rainfallFragment,rainfall,time_w,1,"Rainfall");
 		double lastest_rainfall = 0.0;
-		
+
 		long t = System.currentTimeMillis()-Constant.TOTAL_RAINFALL_PERIODIC;
 		for(int i=rainfall.length-1;time_w[i]>t;i--){
 			lastest_rainfall = rainfall[i]+lastest_rainfall;
 			Log.i("ASIC",lastest_rainfall+"");
 		}
-		
+
 		parserDataToFragment(wind_velocityFragment,wind_velocity,time_w,1,"Wind Vecocity");
 		parserDataToFragment(wind_directionFragment,wind_direction,time_w,90,"Wind Direction");
 		int lastest_light = parserDataToFragment(illuminationFragment,illumination,time_l,0.5,"Light");
 		current_weather = judgeWeather(lastest_light,lastest_rainfall);
-		weatherFragment.update(current_weather,DateUtility.convertUNIXtoDate(System.currentTimeMillis(),true), lastest_temperature, lastest_humidity, lastest_rainfall);
+		weatherFragment.update(current_weather,DateUtility.convertUNIXtoDate(time_th[time_th.length-1],true), lastest_temperature, lastest_humidity, lastest_rainfall);
 
 
 	}

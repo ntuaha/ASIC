@@ -165,8 +165,9 @@ public class BarCavas extends View{
 
 		//For title
 		
-		paintWord.setARGB(200, 150, 150, 150);
+		//paintWord.setARGB(200, 150, 150, 150);
 		paintWord.setTextSize(titleWord);
+		paintWord.setColor(Color.parseColor("#33b5e5"));
 		paintWord.setTextAlign(Align.CENTER);
 		canvas.drawText(title,halfWidth,getHeight()-20, paintWord);
 		canvas.save(Canvas.ALL_SAVE_FLAG);

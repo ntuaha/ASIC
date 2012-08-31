@@ -89,22 +89,22 @@ public class WeatherFragment extends Fragment{
 	
 			updateTimeView.reDraw(getResources().getString(R.string.update_time),-1,update_time);
 			if(temperature>33)
-				temperatureView.reDraw(temperature,Color.RED);
+				temperatureView.reDraw(temperature,getResources().getColor(R.color.main_color_red));
 			else if(temperature>28)
 				temperatureView.reDraw(temperature,Color.argb(255, 255, 128, 0));
 			else if(temperature>18)
-				temperatureView.reDraw(temperature,Color.GREEN);
+				temperatureView.reDraw(temperature,getResources().getColor(R.color.main_color_green));
 			else if(temperature>15)
-				temperatureView.reDraw(temperature,Color.BLUE);
+				temperatureView.reDraw(temperature,getResources().getColor(R.color.main_color_deepblue));
 			else
 				temperatureView.reDraw(temperature,Color.argb(255, 255, 0, 255));
 			
 			if(humidity>70)
-				humidityView.reDraw(humidity,Color.BLUE);		
+				humidityView.reDraw(humidity,getResources().getColor(R.color.main_color_deepblue));		
 			else if (humidity>40)
-				humidityView.reDraw(humidity,Color.GREEN);
+				humidityView.reDraw(humidity,getResources().getColor(R.color.main_color_green));
 			else
-				humidityView.reDraw(humidity,Color.RED);
+				humidityView.reDraw(humidity,getResources().getColor(R.color.main_color_red));
 			rainfallView.reDraw(rainfall,Color.BLACK);
 		}
 	}
