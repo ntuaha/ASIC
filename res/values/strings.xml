@@ -2,7 +2,7 @@
 
     <string name="app_name">ASIC</string>
     <string name="app_full_name">Academia Sinica Information Center (ASIC)</string>
-    <string name="version_number">1.03</string>
+    <string name="version_number">1.04</string>
     <string name="title_section6">風向</string>
     <string name="title_section5">風速</string>
     <string name="title_section4">光度</string>

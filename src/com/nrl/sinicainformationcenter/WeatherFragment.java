@@ -16,6 +16,7 @@ import android.graphics.Color;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 
 import android.view.View;
@@ -37,8 +38,7 @@ public class WeatherFragment extends Fragment{
 	private BarCavas humidityView;
 	private BarCavas rainfallView;
 
-
-
+	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {  
 		View view = inflater.inflate(R.layout.fragment_weather, container, false); 
 		return initial(view,inflater.getContext());  
@@ -106,6 +106,8 @@ public class WeatherFragment extends Fragment{
 			else
 				humidityView.reDraw(humidity,getResources().getColor(R.color.main_color_red));
 			rainfallView.reDraw(rainfall,Color.BLACK);
+		}else{
+			Log.d("WeatherFragment","No added");
 		}
 	}
 

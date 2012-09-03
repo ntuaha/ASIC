@@ -59,7 +59,7 @@ public class InfoFragment extends Fragment{
 		super.setArguments(args);
 	}
 
-
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

@@ -15,15 +15,13 @@ import com.nrl.utility.WeatherConstant;
 
 
 
-import android.app.ActionBar;
 import android.content.Intent;
-import android.drm.DrmStore.Action;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 
 import android.support.v4.view.ViewPager;
 
@@ -31,7 +29,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -134,9 +132,11 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 	}
 
 	public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
-
+		
+		FragmentManager fm;
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
+			this.fm= fm;
 		}
 
 		@Override
@@ -174,6 +174,16 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 
 			}
 			return null;
+		}
+		public int getItemPosition(Object object) {
+			  return POSITION_NONE;
+		}
+		
+		public void destroyItem(ViewGroup container,int position,Object object){
+			  super.destroyItem(container, position, object);
+			  FragmentTransaction bt = fm.beginTransaction();
+			  bt.remove((Fragment)object);
+			  bt.commit();
 		}
 
 	}
@@ -217,7 +227,6 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 			if(data==null){
 				if(NetworkTool.HaveNetworkConnection(ASIC.this))
 				{
-					//Log.i("MainActivity","null");
 					showProcessInfo(getResources().getString(R.string.wait_refresh));
 
 				}else{					
