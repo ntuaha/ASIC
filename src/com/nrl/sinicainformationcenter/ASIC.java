@@ -1,7 +1,7 @@
 package com.nrl.sinicainformationcenter;
 
 
-import org.json.JSONArray;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,7 +21,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 
 import android.support.v4.view.ViewPager;
 
@@ -29,7 +28,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,21 +54,11 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 
 	TextView processView;
 
-	long[] time_th;
-	long[] time_l;
-	long[] time_w;
-	double[] temperature;
-	double[] humidity;
-	double[] rainfall;
-	double[] illumination;
-	double[] wind_velocity;
-	double[] wind_direction;
-
 	long last_update_time =0;
 
 
 	TempData tempData;
-
+	Data data;
 
 	@Override
 	protected void onResume() {
@@ -97,7 +85,6 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		mViewPager.setOffscreenPageLimit(NUM_ITEMS-1);
 		temperatureFragment = new InfoFragment();				
 		humidityFragment = new InfoFragment();
 		rainfallFragment = new InfoFragment();
@@ -108,6 +95,7 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 		weatherFragment = new WeatherFragment();
 		tempData = new TempData();
 		tempData.loadData(getSharedPreferences(TempData.PREFS_NAME,0));
+		data = new Data();
 	}
 
 
@@ -132,7 +120,7 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 	}
 
 	public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
-		
+
 		FragmentManager fm;
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -141,15 +129,36 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 
 		@Override
 		public Fragment getItem(int i) {
-			Log.d("ASIC","getItem run");
+			Log.d("ASIC","getItem run "+i);
 			switch(i){
-			case 0: return weatherFragment;
-			case 1:	return temperatureFragment;				
-			case 2: return humidityFragment;
-			case 3: return rainfallFragment;
-			case 4: return illuminationFragment;
-			case 5: return wind_velocityFragment;
-			case 6: return wind_directionFragment;
+			case 0: 
+				weatherFragment = new WeatherFragment();
+				setWeatherFragment();
+				return weatherFragment;
+			case 1:
+				temperatureFragment = new InfoFragment();
+				setTemperatureFragment();				
+				return temperatureFragment;				
+			case 2:
+				humidityFragment = new InfoFragment();
+				setHumidityFragment();
+				return humidityFragment;
+			case 3:
+				rainfallFragment = new InfoFragment();
+				setRainfallFragment();
+				return rainfallFragment;
+			case 4:
+				illuminationFragment = new InfoFragment();
+				setIlluminationFragment();
+				return illuminationFragment;
+			case 5:
+				wind_velocityFragment = new InfoFragment();
+				setWindVelocityFragment();
+				return wind_velocityFragment;
+			case 6:
+				wind_directionFragment = new InfoFragment();
+				setWindDirectionFragment();
+				return wind_directionFragment;
 			default: return otherFragment;
 			}
 
@@ -175,23 +184,11 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 			}
 			return null;
 		}
-		public int getItemPosition(Object object) {
-			  return POSITION_NONE;
-		}
-		
-		public void destroyItem(ViewGroup container,int position,Object object){
-			  super.destroyItem(container, position, object);
-			  FragmentTransaction bt = fm.beginTransaction();
-			  bt.remove((Fragment)object);
-			  bt.commit();
-		}
-
 	}
 
 
 	@Override
 	protected void onDestroy() {
-		//UIhandler.removeCallbacks(runnable);
 		super.onDestroy();
 	}
 
@@ -246,68 +243,10 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 				last_update_time = System.currentTimeMillis();
 				hideProcessInfo();
 			}
-
-
-
-			//Parser JSONData to native array
-			JSONArray temperatures = data.getJSONArray("temperature");
-			JSONArray humidities = data.getJSONArray("humidity");
-			JSONArray times_th = data.getJSONArray("time_th");					
-			int size = temperatures.length();
-			temperature = new double[size];
-			humidity = new double[size];
-			time_th = new long[size];
-			for(int i=0;i<time_th.length;i++){
-				temperature[i] = temperatures.getDouble(i);
-				humidity[i] = humidities.getDouble(i); 
-				time_th[i] = times_th.getLong(i)*1000;
-			}
-
-			JSONArray illuminations = data.getJSONArray("light");
-			JSONArray times_l = data.getJSONArray("time_l");
-			size = times_l.length();
-			illumination = new double[size];
-			time_l = new long[size];
-			for(int i=0;i<time_l.length;i++){
-				illumination[i] = illuminations.getDouble(i)/1000;
-				time_l[i] = times_l.getLong(i)*1000;
-			}
-
-			JSONArray rainfalls = data.getJSONArray("rain");
-			JSONArray wind_directions = data.getJSONArray("wind");
-			JSONArray wind_velocities = data.getJSONArray("anemometer");		
-			JSONArray times_w = data.getJSONArray("time_w");
-			size = wind_velocities.length();
-			rainfall = new double[size];
-			wind_velocity = new double[size];
-			wind_direction = new double[size];
-			time_w = new long[size];
-			for(int i=0;i<time_w.length;i++){
-				rainfall[i] = rainfalls.getDouble(i);
-				wind_velocity[i] = wind_velocities.getDouble(i);
-				String direciton = wind_directions.getString(i);
-				if(direciton=="E"){
-					wind_direction[i] = 90;
-				}else if(direciton.equals("W")){
-					wind_direction[i] = 270;
-				}else if(direciton.equals("N")){
-					wind_direction[i] = 0;
-				}else if(direciton.equals("S")){
-					wind_direction[i] = 180;
-				}else if(direciton.equals("NW")){
-					wind_direction[i] = 315;
-				}else if(direciton.equals("NE")){
-					wind_direction[i] = 45;
-				}else if(direciton.equals("SE")){
-					wind_direction[i] = 135;
-				}else if(direciton.equals("SW")){
-					wind_direction[i] = 225;
-				}
-				time_w[i] = times_w.getLong(i)*1000;
-			}
-
+			ASIC.this.data.parserData(data, ASIC.this);
+			//mSectionsPagerAdapter.notifyDataSetChanged();
 			reDraw();
-
+		
 		} catch (JSONException e) {
 			Toast.makeText(ASIC.this, "JSON error", Toast.LENGTH_SHORT).show();
 			finish();
@@ -315,29 +254,103 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 		}
 
 	}
+	private void setWeatherFragment(){
+		if(data.time_th==null||data.time_th.length<=0)
+		{
+			Log.i("ASIC","Weather null");
+			return;
+		}
+		Bundle bundle = new Bundle();
+		
+		bundle.putString("timestamp",DateUtility.convertUNIXtoDate(data.time_th[data.time_th.length-1],true));
+		bundle.putDouble("temperature", data.lastest_temperature);
+		bundle.putDouble("humidity", data.lastest_humidity);
+		bundle.putDouble("rainfall", data.lastest_rainfall);
+		bundle.putDouble("light", data.lastest_light);
+		weatherFragment.setArguments(bundle);
+	}
+	private void setTemperatureFragment()
+	{
+		Bundle bundle = new Bundle();
+		bundle.putDoubleArray("data", ASIC.this.data.temperature);
+		bundle.putLongArray("time", ASIC.this.data.time_th);
+		bundle.putDouble("margin", 0.5);
+		bundle.putString("title","Temperature");
+		temperatureFragment.setArguments(bundle);
+	}
+
+	private void setHumidityFragment(){
+		Bundle bundle = new Bundle();
+		bundle.putDoubleArray("data", ASIC.this.data.humidity);
+		bundle.putLongArray("time", ASIC.this.data.time_th);
+		bundle.putDouble("margin",1);
+		bundle.putString("title","Humidity");
+		humidityFragment.setArguments(bundle);
+	}
+
+
+
+	private void setRainfallFragment(){
+		Bundle bundle = new Bundle();
+		bundle.putDoubleArray("data", ASIC.this.data.rainfall);
+		bundle.putLongArray("time", ASIC.this.data.time_w);
+		bundle.putDouble("margin",1);
+		bundle.putString("title","Rainfall");
+		rainfallFragment.setArguments(bundle);
+	}
+
+	private void setWindVelocityFragment(){
+		Bundle bundle = new Bundle();
+		bundle.putDoubleArray("data", ASIC.this.data.wind_velocity);
+		bundle.putLongArray("time", ASIC.this.data.time_w);
+		bundle.putDouble("margin",1);
+		bundle.putString("title","Wind Velocity");
+		wind_velocityFragment.setArguments(bundle);
+	}
+	private void setWindDirectionFragment()
+	{
+		Bundle bundle = new Bundle();
+		bundle.putDoubleArray("data", ASIC.this.data.wind_direction);
+		bundle.putLongArray("time", ASIC.this.data.time_w);
+		bundle.putDouble("margin",90);
+		bundle.putString("title","Wind Direction");
+		wind_directionFragment.setArguments(bundle);
+	}
+	private void setIlluminationFragment(){
+		Bundle bundle = new Bundle();
+		bundle.putDoubleArray("data", ASIC.this.data.illumination);
+		bundle.putLongArray("time", ASIC.this.data.time_l);
+		bundle.putDouble("margin",0.5);
+		bundle.putString("title","Light");
+		illuminationFragment.setArguments(bundle);
+
+	}
+
+
+
 	private void reDraw(){
-		if(time_th == null){
+		if(data.time_th == null){
 			Log.i("noredraw","no");
 			return;
 		}
 
 		WeatherConstant current_weather= WeatherConstant.UNKNOW;
-		int lastest_temperature = parserDataToFragment(temperatureFragment,temperature,time_th,0.5,"Temperature");
-		int lastest_humidity = parserDataToFragment(humidityFragment,humidity,time_th,1,"Humidity");
-		parserDataToFragment(rainfallFragment,rainfall,time_w,1,"Rainfall");
+		int lastest_temperature = parserDataToFragment(temperatureFragment,data.temperature,data.time_th,0.5,"Temperature");
+		int lastest_humidity = parserDataToFragment(humidityFragment,data.humidity,data.time_th,1,"Humidity");
+		parserDataToFragment(rainfallFragment,data.rainfall,data.time_w,1,"Rainfall");
 		double lastest_rainfall = 0.0;
 
 		long t = System.currentTimeMillis()-Constant.TOTAL_RAINFALL_PERIODIC;
-		for(int i=rainfall.length-1;time_w[i]>t;i--){
-			lastest_rainfall = rainfall[i]+lastest_rainfall;
+		for(int i=data.rainfall.length-1;data.time_w[i]>t;i--){
+			lastest_rainfall = data.rainfall[i]+lastest_rainfall;
 			Log.i("ASIC",lastest_rainfall+"");
 		}
 
-		parserDataToFragment(wind_velocityFragment,wind_velocity,time_w,1,"Wind Vecocity");
-		parserDataToFragment(wind_directionFragment,wind_direction,time_w,90,"Wind Direction");
-		int lastest_light = parserDataToFragment(illuminationFragment,illumination,time_l,0.5,"Light");
-		current_weather = judgeWeather(lastest_light,lastest_rainfall);
-		weatherFragment.update(current_weather,DateUtility.convertUNIXtoDate(time_th[time_th.length-1],true), lastest_temperature, lastest_humidity, lastest_rainfall);
+		parserDataToFragment(wind_velocityFragment,data.wind_velocity,data.time_w,1,"Wind Vecocity");
+		parserDataToFragment(wind_directionFragment,data.wind_direction,data.time_w,90,"Wind Direction");
+		int lastest_light = parserDataToFragment(illuminationFragment,data.illumination,data.time_l,0.5,"Light");
+		current_weather = WeatherFragment.judgeWeather(lastest_light,lastest_rainfall);
+		weatherFragment.update(current_weather,DateUtility.convertUNIXtoDate(data.time_th[data.time_th.length-1],true), lastest_temperature, lastest_humidity, lastest_rainfall);
 
 
 	}
@@ -355,21 +368,7 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 		fragment.reDraw(Dmin-data_margin,Dmax+data_margin,title);
 		return lastest_data;
 	}
-	// Judge the weather in Sinica
-	private WeatherConstant judgeWeather(double current_light,double current_rainfall){
-		if(current_rainfall==0)
-		{
-			if(current_light>=3.0){
-				return WeatherConstant.SUN;
-			}else if(current_light==0.0){
-				return WeatherConstant.MOON;
-			}else{
-				return WeatherConstant.CLOUD;
-			}
-		}else{
-			return WeatherConstant.RAIN;
-		}
-	}
+	
 
 
 }

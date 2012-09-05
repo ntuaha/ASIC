@@ -33,7 +33,7 @@ public class InfoFragment extends Fragment{
 
 	private XYMultipleSeriesDataset mDataset;
 	private XYMultipleSeriesRenderer mRenderer;
-	String title;
+	String title = "";
 	double YMax;
 	double YMin;
 	private GraphicalView mChartView;
@@ -42,6 +42,13 @@ public class InfoFragment extends Fragment{
 	// chart container
 	private LinearLayout layout;
 
+	
+	double margin = 0;	
+	double[] data = null;
+	long[] time = null;
+
+	
+	
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {  
 		View view = inflater.inflate(R.layout.fragment_info, container, false); 
@@ -52,10 +59,10 @@ public class InfoFragment extends Fragment{
 
 	@Override
 	public void setArguments(Bundle args) {
-		YMax = args.getDouble("YMax");
-		YMin = args.getDouble("YMin");
+		margin = args.getDouble("margin");		
 		title = args.getString("title");
-
+		data = args.getDoubleArray("data");
+		time = args.getLongArray("time");
 		super.setArguments(args);
 	}
 
@@ -63,15 +70,10 @@ public class InfoFragment extends Fragment{
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		title="test";
 		super.onCreate(savedInstanceState);
-
 	}
 
 	public View initial(View view,final Context context){
-		//comfortHistoryPlot = (XYPlot) view.findViewById(R.id.plot_area);
-		//initialComfortHistoryPlot();
-		//return view;
 		return initialChart(view,context);
 
 	}
@@ -113,6 +115,20 @@ public class InfoFragment extends Fragment{
 		mChartView = ChartFactory.getTimeChartView(context, mDataset, mRenderer,"H:mm");
 		
 		layout.addView(mChartView);	
+		
+		double Dmin = 100;
+		double Dmax = 0;
+		clean();
+		if(time==null||time.length<=0)
+			return view;
+		for(int i=0;i<time.length;i++){
+			add(time[i], data[i]);
+			Dmin = (Dmin>data[i])?data[i]:Dmin;
+			Dmax = (data[i]>Dmax)?data[i]:Dmax;
+		}
+		reDraw(Dmin-margin,Dmax+margin,title);	
+		
+		
 		return view;
 	}
 

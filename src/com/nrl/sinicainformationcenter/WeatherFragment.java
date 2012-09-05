@@ -27,9 +27,23 @@ import android.widget.ImageView;
 
 public class WeatherFragment extends Fragment{
 
+	private double temperature = 0;
+	private double humidity = 0;
+	private double rainfall = 0;
+	private double light = 0;
+	private String update_time = "";
 
 
 
+	@Override
+	public void setArguments(Bundle args) {
+		temperature = args.getDouble("temperature");
+		humidity = args.getDouble("humidity");
+		rainfall = args.getDouble("rainfall");
+		update_time = args.getString("timestamp");
+		light = args.getDouble("light");		
+		super.setArguments(args);
+	}
 
 	// chart container
 	private ImageView weatherView;
@@ -79,6 +93,9 @@ public class WeatherFragment extends Fragment{
 		rainfallView.setMode(BarCavas.Mode.NUMBER);
 		rainfallView.setTitle(getResources().getString(R.string.total_rainfall));
 		rainfallView.reDraw(getResources().getString(R.string.total_rainfall),-1,"N/A");
+		
+		
+		update(judgeWeather(light,rainfall), update_time, (int)temperature, (int)humidity, rainfall);
 		return view;
 	}
 
@@ -106,8 +123,23 @@ public class WeatherFragment extends Fragment{
 			else
 				humidityView.reDraw(humidity,getResources().getColor(R.color.main_color_red));
 			rainfallView.reDraw(rainfall,Color.BLACK);
+			Log.i("WeatherFragment","GO");
 		}else{
 			Log.d("WeatherFragment","No added");
+		}
+	}
+	public static WeatherConstant judgeWeather(double current_light,double current_rainfall){
+		if(current_rainfall==0)
+		{
+			if(current_light>=3.0){
+				return WeatherConstant.SUN;
+			}else if(current_light==0.0){
+				return WeatherConstant.MOON;
+			}else{
+				return WeatherConstant.CLOUD;
+			}
+		}else{
+			return WeatherConstant.RAIN;
 		}
 	}
 
