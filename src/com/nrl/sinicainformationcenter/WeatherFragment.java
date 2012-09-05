@@ -8,14 +8,19 @@ package com.nrl.sinicainformationcenter;
 
 
 
+import java.util.Calendar;
+import java.util.Date;
+
 import com.nrl.customView.BarCavas;
 import com.nrl.utility.WeatherConstant;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 
@@ -55,8 +60,22 @@ public class WeatherFragment extends Fragment{
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {  
 		View view = inflater.inflate(R.layout.fragment_weather, container, false); 
+		Log.i("WeatherFragment","onCreateView");
 		return initial(view,inflater.getContext());  
 	}  
+
+
+	@Override
+	public void onAttach(Activity activity) {
+		Log.i("WeatherFragment","on Attached");
+		super.onAttach(activity);
+	}
+
+	@Override
+	public void onResume() {
+		Log.i("WeatherFragment","on Resume");
+		super.onResume();
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +84,7 @@ public class WeatherFragment extends Fragment{
 	}
 
 	public View initial(View view,final Context context){
+		
 		return initialView(view,context);
 	}
 	private View initialView(View view,Context context){
@@ -133,7 +153,7 @@ public class WeatherFragment extends Fragment{
 		{
 			if(current_light>=3.0){
 				return WeatherConstant.SUN;
-			}else if(current_light==0.0){
+			}else if(current_light<0.3&&(Calendar.getInstance().get(Calendar.HOUR_OF_DAY)>18||Calendar.getInstance().get(Calendar.HOUR_OF_DAY)<6)){
 				return WeatherConstant.MOON;
 			}else{
 				return WeatherConstant.CLOUD;

@@ -80,11 +80,13 @@ public class ASIC extends FragmentActivity implements RetrieveDataTask.UITask{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
 		processView = (TextView) findViewById(R.id.process);
 
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
+		//mViewPager.setOffscreenPageLimit(NUM_ITEMS-1);
+		
+		
 		temperatureFragment = new InfoFragment();				
 		humidityFragment = new InfoFragment();
 		rainfallFragment = new InfoFragment();
